@@ -29,10 +29,10 @@ export default {
       },
     },
   },
-  async customValidate(
+  customValidate: async (
     data: validateParams,
     errors: errorParmas
-  ): Promise<boolean> {
+  ): Promise<boolean> => {
     return new Promise((resolve) => {
       setTimeout(() => {
         if (data.pass1 !== data.pass2) {

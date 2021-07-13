@@ -14,33 +14,39 @@
       <monacoEditor
         class="edit"
         :code="schemaDemo.schemaCode"
-        :onChange="handleChange"
+        :onChange="handleSchemaChange"
         title="Schema"
       ></monacoEditor>
       <div class="bottom-wrapper">
         <monacoEditor
           class="bottom-item"
           :code="schemaDemo.uiSchemaCode"
-          :onChange="handleChange"
+          :onChange="handleUISchemaChange"
           title="UISchema"
         ></monacoEditor>
         <monacoEditor
           class="bottom-item"
           :code="schemaDemo.dataCode"
-          :onChange="handleChange"
+          :onChange="handleDataChange"
           title="Value"
         ></monacoEditor>
       </div>
     </div>
-    <div>form</div>
+    <div class="main">
+      <SchemaForm
+        :schema="schemaDemo.schema"
+        v-model="schemaDemo.data"
+      ></SchemaForm>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import * as monaco from "monaco-editor";
 import monacoEditor from "./components/monacoEditor";
-import { defineComponent, ref, reactive, watchEffect } from "vue";
-import demos from "./demos";
+import { defineComponent, ref, reactive, watchEffect, watch } from "vue";
+import SchemaForm from "../lib/schemaForm";
+import demos from "./demos/index";
 function toJson(data: any) {
   return JSON.stringify(data, null, 2);
 }
@@ -49,6 +55,7 @@ type Schema = any;
 type UISchema = any;
 export default defineComponent({
   components: {
+    SchemaForm,
     monacoEditor,
   },
   setup() {
@@ -80,10 +87,17 @@ export default defineComponent({
       schemaDemo.dataCode = toJson(_demo_item.default);
       schemaDemo.uiSchemaCode = toJson(_demo_item.uiSchema);
       if ("customValidate" in _demo_item) {
-        schemaDemo.customValidate = _demo_item.customValidate;
+        schemaDemo.customValidate = (_demo_item as any).customValidate;
       }
     });
 
+    watch(
+      () => schemaDemo.data,
+      (newValue) => {
+        schemaDemo.data = newValue;
+        schemaDemo.dataCode = toJson(newValue);
+      }
+    );
     const handleChange = (
       key: "schema" | "data" | "uiSchema",
       value: string,
@@ -162,6 +176,10 @@ export default defineComponent({
       width: 320px;
       height: 400px;
     }
+  }
+  .main {
+    padding-top: 55px;
+    width: 400px;
   }
 }
 </style>
