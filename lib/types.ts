@@ -6,6 +6,9 @@ export enum SchemaType {
   "ARRAY" = "array",
   "BOOLEAN" = "boolean",
 }
+export const SchemaKey = Symbol();
+export const modelValueKey = Symbol();
+export const updateModelValueKey = Symbol();
 type SchemaRef = { $ref: string };
 export interface Schema {
   type?: SchemaType | string;
