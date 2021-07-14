@@ -1,21 +1,19 @@
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, inject, Ref, ref } from "vue";
 
 export default defineComponent({
   name: "StringField",
-  props: {
-    modelValue: {
-      type: String,
-      required: true,
-    },
-  },
-  emit: ["update:modelValue"],
-  setup(props, { emit }) {
+  setup() {
+    const modelValue: Ref<string> = inject("modelValue", ref(""));
+    const updateModelValue = inject(
+      "updateModelValue",
+      (v: string) => undefined
+    );
     const value = computed({
       get() {
-        return props.modelValue;
+        return modelValue.value;
       },
-      set(value: any) {
-        emit("update:modelValue", value);
+      set(value) {
+        updateModelValue(value as string);
       },
     });
     return () => {

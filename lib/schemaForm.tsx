@@ -1,11 +1,13 @@
-import { computed, defineComponent, PropType } from "vue";
-import { SchemaType, Schema } from "./types";
-import StringField from "./fields/stringField";
-import NumberField from "./fields/numberField";
+import { computed, defineComponent, PropType, toRefs, provide } from "vue";
+import { Schema } from "./types";
+import SchemaItem from "./schemaItem";
+import { retrieveSchema } from "./utils";
 // import SchemaFormStyle from "./schemaForm.less";
 export default defineComponent({
   name: "SchemaForm",
-  components: { NumberField, StringField },
+  components: {
+    SchemaItem,
+  },
   props: {
     schema: {
       type: Object as PropType<Schema>,
@@ -17,38 +19,16 @@ export default defineComponent({
   },
   emit: ["update:modelValue"],
   setup(props, { emit }) {
-    const schemaValue = computed({
-      get() {
-        return props.modelValue;
-      },
-      set(value: any) {
-        emit("update:modelValue", value);
-      },
-    });
-    return () => {
-      const {
-        schema: { type: schemaType },
-      } = props;
-      let inputComponent;
-      switch (schemaType) {
-        case SchemaType.STRING:
-          inputComponent = (
-            // @ts-ignore
-            <StringField v-model={schemaValue.value}></StringField>
-          );
-          break;
-        case SchemaType.NUMBER:
-          inputComponent = (
-            // @ts-ignore
-            <NumberField v-model={schemaValue.value}></NumberField>
-          );
-          break;
-        default:
-          console.log("schemaType error");
-          break;
-      }
-
-      return <div>{inputComponent}</div>;
+    const { schema, modelValue } = toRefs(props);
+    const updateModelValue = (value: any) => {
+      emit("update:modelValue", value);
     };
+    provide("schema", schema);
+    provide("modelValue", modelValue);
+    provide("updateModelValue", updateModelValue);
+    const retrieveSchemaRef = computed(() => {
+      return retrieveSchema(props.schema, props.schema, props.modelValue);
+    });
+    return () => <SchemaItem></SchemaItem>;
   },
 });

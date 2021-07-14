@@ -1,21 +1,19 @@
-import { defineComponent, computed } from "vue";
+import { defineComponent, computed, inject, ref, Ref } from "vue";
 
 export default defineComponent({
   name: "NumberFiled",
-  props: {
-    modelValue: {
-      type: Number,
-      required: true,
-    },
-  },
-  emit: ["update:modelValue"],
-  setup(props, { emit }) {
+  setup() {
+    const modelValue: Ref<number> = inject("modelValue", ref(0));
+    const updateModelValue = inject(
+      "updateModelValue",
+      (v: number) => undefined
+    );
     const value = computed({
       get() {
-        return props.modelValue;
+        return modelValue.value;
       },
       set(value) {
-        emit("update:modelValue", parseInt(value as string));
+        updateModelValue(parseInt(value as string) as number);
       },
     });
     return () => {
