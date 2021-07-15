@@ -1,5 +1,5 @@
-import { computed, defineComponent, PropType, toRefs, provide } from "vue";
-import { Schema, SchemaKey, updateModelValueKey, modelValueKey } from "./types";
+import { defineComponent, PropType, provide } from "vue";
+import { Schema, SchemaItemKey } from "./types";
 import SchemaItem from "./schemaItem";
 import { retrieveSchema } from "./utils";
 // import SchemaFormStyle from "./schemaForm.less";
@@ -17,20 +17,18 @@ export default defineComponent({
       required: true,
     },
   },
-  emit: ["update:modelValue"],
+  emits: ["update:modelValue"],
   setup(props, { emit }) {
-    const { schema, modelValue } = toRefs(props);
-    const updateModelValue = (value: any) => {
-      emit("update:modelValue", value);
-    };
-    provide(SchemaKey, schema);
-    provide(modelValueKey, modelValue);
-    provide(updateModelValueKey, updateModelValue);
-    const retrieveSchemaRef = computed(() => {
-      return retrieveSchema(props.schema, props.schema, props.modelValue);
-    });
+    provide(SchemaItemKey, SchemaItem);
     return () => {
-      return <SchemaItem></SchemaItem>;
+      const { schema, modelValue } = props;
+      return (
+        <SchemaItem
+          schema={schema}
+          modelValue={modelValue}
+          onChange={(v) => emit("update:modelValue", v)}
+        ></SchemaItem>
+      );
     };
   },
 });

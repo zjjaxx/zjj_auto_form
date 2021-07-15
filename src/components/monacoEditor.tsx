@@ -46,7 +46,7 @@ export default defineComponent({
         }
       ));
       _subscription = editor.onDidChangeModelContent((event) => {
-        console.log("--------->", __prevent_trigger_change_event);
+        // console.log("--------->", __prevent_trigger_change_event);
         if (!__prevent_trigger_change_event) {
           props.onChange(editor.getValue(), event);
         }
@@ -60,7 +60,7 @@ export default defineComponent({
       (v) => {
         const editor = editorRef.value;
         const model = editor.getModel();
-        console.log("v is", v, "model value is", model.getValue());
+        // console.log("v is", v, "model value is", model.getValue());
         if (v !== model.getValue()) {
           console.log("v !== model.getValue()");
           editor.pushUndoStop();

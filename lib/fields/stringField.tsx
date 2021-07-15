@@ -1,23 +1,28 @@
-import { computed, defineComponent, inject, Ref, ref } from "vue";
-
+import { defineComponent, PropType } from "vue";
+import { Schema } from "../types";
 export default defineComponent({
   name: "StringField",
-  setup() {
-    const modelValue: Ref<string> = inject("modelValue", ref(""));
-    const updateModelValue = inject(
-      "updateModelValue",
-      (v: string) => undefined
-    );
-    const value = computed({
-      get() {
-        return modelValue.value;
-      },
-      set(value) {
-        updateModelValue(value as string);
-      },
-    });
+  props: {
+    modelValue: {
+      type: String,
+      required: true,
+    },
+    schema: {
+      type: Object as PropType<Schema>,
+      required: true,
+    },
+    onChange: {
+      type: Function as PropType<(v: string) => void>,
+      required: true,
+    } as const,
+  },
+  setup(props) {
+    const handleEvent = (e: Event) => {
+      props.onChange((e.target as HTMLInputElement).value);
+    };
     return () => {
-      return <input type="text" v-model={value.value} />;
+      const { modelValue } = props;
+      return <input type="text" value={modelValue} onInput={handleEvent} />;
     };
   },
 });

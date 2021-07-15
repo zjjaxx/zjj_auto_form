@@ -1,23 +1,28 @@
-import { defineComponent, computed, inject, ref, Ref } from "vue";
-
+import { defineComponent, PropType, computed, inject, ref, Ref } from "vue";
+import { Schema } from "../types";
 export default defineComponent({
   name: "NumberFiled",
-  setup() {
-    const modelValue: Ref<number> = inject("modelValue", ref(0));
-    const updateModelValue = inject(
-      "updateModelValue",
-      (v: number) => undefined
-    );
-    const value = computed({
-      get() {
-        return modelValue.value;
-      },
-      set(value) {
-        updateModelValue(parseInt(value as string) as number);
-      },
-    });
+  props: {
+    modelValue: {
+      type: Number,
+      required: true,
+    },
+    schema: {
+      type: Object as PropType<Schema>,
+      required: true,
+    },
+    onChange: {
+      type: Function as PropType<(v: number) => void>,
+      required: true,
+    },
+  },
+  setup(props) {
+    const handleEvent = (e: Event) => {
+      props.onChange(parseInt((e.target as HTMLInputElement).value));
+    };
     return () => {
-      return <input type="number" v-model={value.value} />;
+      const { modelValue } = props;
+      return <input type="number" value={modelValue} onInput={handleEvent} />;
     };
   },
 });
