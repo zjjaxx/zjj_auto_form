@@ -103,7 +103,6 @@ export default defineComponent({
       value: string,
       event: monaco.editor.IModelContentChangedEvent
     ) => {
-      console.log("event is", event);
       try {
         schemaDemo[key] = JSON.parse(value);
         schemaDemo[key + "Code"] = value;

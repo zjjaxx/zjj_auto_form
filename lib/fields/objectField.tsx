@@ -20,8 +20,7 @@ export default defineComponent({
   components: {},
   setup(props) {
     const SchemaItem = inject(SchemaItemKey);
-    const handleEvent = (key: string, v: number | string) => {
-      console.log("modelValue------------", props.modelValue);
+    const handleEvent = (key: string, v: unknown) => {
       const _modelValue = Object.assign({}, props.modelValue);
       _modelValue[key] = v;
       props.onChange(_modelValue);
@@ -35,7 +34,7 @@ export default defineComponent({
           <SchemaItem
             schema={schema.properties![key]}
             modelValue={modelValue[key]}
-            onChange={(v: number | string) => handleEvent(key, v)}
+            onChange={(v: unknown) => handleEvent(key, v)}
           ></SchemaItem>
         ));
       }

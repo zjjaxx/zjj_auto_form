@@ -62,7 +62,6 @@ export default defineComponent({
         const model = editor.getModel();
         // console.log("v is", v, "model value is", model.getValue());
         if (v !== model.getValue()) {
-          console.log("v !== model.getValue()");
           editor.pushUndoStop();
           __prevent_trigger_change_event = true;
           // pushEditOperations says it expects a cursorComputer, but doesn't seem to need one.

@@ -3,6 +3,7 @@ import { SchemaType, Schema, ObjectType } from "./types";
 import StringField from "./fields/stringField";
 import NumberField from "./fields/numberField";
 import ObjectField from "./fields/objectField";
+import ArrayField from "./fields/arrayField";
 export default defineComponent({
   name: "SchemaItem",
   props: {
@@ -22,6 +23,7 @@ export default defineComponent({
     StringField,
     NumberField,
     ObjectField,
+    ArrayField,
   },
   setup(props) {
     return () => {
@@ -58,6 +60,15 @@ export default defineComponent({
               schema={schema}
               modelValue={modelValue as ObjectType}
             ></ObjectField>
+          );
+          break;
+        case SchemaType.ARRAY:
+          inputComponent = (
+            <ArrayField
+              onChange={onChange}
+              schema={schema}
+              modelValue={modelValue as unknown[]}
+            ></ArrayField>
           );
           break;
         default:
